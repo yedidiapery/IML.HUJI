@@ -1,8 +1,13 @@
 from __future__ import annotations
 from typing import NoReturn
+
+import sklearn.linear_model
+
 from ...base import BaseEstimator
 import numpy as np
 from numpy.linalg import pinv
+
+from ...metrics import loss_functions
 
 
 class LinearRegression(BaseEstimator):
@@ -49,7 +54,9 @@ class LinearRegression(BaseEstimator):
         -----
         Fits model with or without an intercept depending on value of `self.include_intercept_`
         """
-        raise NotImplementedError()
+        self.model_ = sklearn.linear_model.LinearRegression(fit_intercept=self.include_intercept_)
+        self.model_.fit(X, y)
+        self.coefs_ = self.model_.coef_
 
     def _predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -65,7 +72,7 @@ class LinearRegression(BaseEstimator):
         responses : ndarray of shape (n_samples, )
             Predicted responses of given samples
         """
-        raise NotImplementedError()
+        return self.model_.predict(X)
 
     def _loss(self, X: np.ndarray, y: np.ndarray) -> float:
         """
@@ -84,4 +91,4 @@ class LinearRegression(BaseEstimator):
         loss : float
             Performance under MSE loss function
         """
-        raise NotImplementedError()
+        return loss_functions.mean_square_error(y, self._predict(X))

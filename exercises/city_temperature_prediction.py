@@ -21,7 +21,7 @@ def load_data(filename: str) -> pd.DataFrame:
     -------
     Design matrix and response vector (Temp)
     """
-    raise NotImplementedError()
+
 
 
 if __name__ == '__main__':
